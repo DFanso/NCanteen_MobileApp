@@ -9,8 +9,8 @@ import {
   BackHandler,
 } from "react-native";
 import axios from "axios";
-import Cart from "./cart.js";
 import { CartContext } from "./CartContext";
+import Cart from "./cart.js";
 
 const HelaBojunDinner = ({ navigation }) => {
   const [page, setPage] = useState("helaBojunDinner");
@@ -20,39 +20,16 @@ const HelaBojunDinner = ({ navigation }) => {
   const fetchFoodItems = async () => {
     try {
       const response = await axios.get(
-        "http://192.168.1.7:3000/api/food-items/list?canteenId=643bf46d34379c74054a99ee&mealType=dinner"
+        "http://192.168.1.4:3000/api/food-items/list?canteenId=643bf46d34379c74054a99ee&mealType=dinner"
       );
       setFoodItems(response.data.foodItems);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
-
   useEffect(() => {
     fetchFoodItems();
   }, []);
-
-  const handleButtonPress = (buttonName) => {
-    setPage(buttonName);
-  };
-
-  useEffect(() => {
-    const backAction = () => {
-      if (page !== "helaBojunDinner") {
-        setPage("helaBojunDinner");
-        return true;
-      }
-      return false;
-    };
-
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
-
-    return () => backHandler.remove();
-  }, [page]);
-
   const renderFoodItem = (foodItem) => {
     const outOfStock = foodItem.quantity === 0;
 
@@ -97,6 +74,27 @@ const HelaBojunDinner = ({ navigation }) => {
     );
   };
 
+  const handleButtonPress = (buttonName) => {
+    setPage(buttonName);
+  };
+
+  useEffect(() => {
+    const backAction = () => {
+      if (page !== "helaBojunDinner") {
+        setPage("helaBojunDinner");
+        return true;
+      }
+      return false;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, [page]);
+
   return (
     <>
       {page === "helaBojunDinner" ? (
@@ -105,21 +103,37 @@ const HelaBojunDinner = ({ navigation }) => {
             <View style={styles.welcomeContainer}>
               <Text style={styles.welcomeText}>Welcome</Text>
             </View>
-            <View style={styles.helaBojunDinnerMenu}>
-              {foodItems.map((foodItem) => renderFoodItem(foodItem))}
+            <View style={styles.helaBojunContainer}>
+              <Text style={styles.hostelText}>Hela Bojun</Text>
+            </View>
+
+            <View style={styles.menuContainer}>
+              <View style={styles.headerContainer}>
+                <View style={styles.menuHeader}>
+                  <Text style={styles.menuHeaderText}>Dinner Food Menu</Text>
+                </View>
+                <TouchableOpacity onPress={() => handleButtonPress("cart")}>
+                  <Image
+                    style={styles.cartIcon}
+                    source={{
+                      uri: "https://drive.google.com/uc?export=view&id=1wsIvFn-dgqzLn2Dj65_piCFMbHQLkBKK",
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+
+              <Text style={styles.orderText}>
+                Please order the items you want at least half hour before.
+              </Text>
+
+              <View style={styles.menuItemsContainer}>
+                {foodItems.map((foodItem) => renderFoodItem(foodItem))}
+              </View>
             </View>
           </ScrollView>
-          <View style={styles.cartButtonContainer}>
-            <TouchableOpacity
-              style={styles.cartButton}
-              onPress={() => handleButtonPress("cart")}
-            >
-              <Text style={styles.cartButtonText}>View Cart</Text>
-            </TouchableOpacity>
-          </View>
         </View>
       ) : (
-        <Cart goBack={() => handleButtonPress("helaBojunDinner")} />
+        <Cart />
       )}
     </>
   );
@@ -132,79 +146,122 @@ const styles = StyleSheet.create({
   },
   welcomeContainer: {
     alignItems: "center",
-    justifyContent: "center",
     marginTop: 20,
+    paddingHorizontal: 30,
+    borderWidth: 2,
+    borderColor: "#6EC130",
+    backgroundColor: "#fff",
+    marginBottom: 20,
+    marginLeft: 48,
+    marginRight: 48,
   },
   welcomeText: {
     fontSize: 24,
     fontWeight: "bold",
-  },
-  helaBojunDinnerMenu: {
-    marginTop: 20,
-  },
-  menuItem: {
-    flexDirection: "row",
-    marginHorizontal: 20,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 10,
+    textAlign: "center",
+    color: "#6EC130",
     padding: 10,
   },
+  menuContainer: {
+    margin: 15,
+    paddingTop: 10,
+  },
+  menuHeader: {
+    borderWidth: 2,
+    borderColor: "#6EC130",
+    borderRadius: 5,
+    padding: 10,
+    backgroundColor: "#fff",
+    width: "45%",
+    marginLeft: 30,
+  },
+  menuHeaderText: {
+    fontSize: 17,
+    fontWeight: "bold",
+    color: "#6EC130",
+  },
+  orderText: {
+    marginVertical: 15,
+    color: "#4EE476",
+    textAlign: "center",
+  },
+  menuItemsContainer: {
+    marginTop: 5,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+  },
+  menuItem: {
+    width: "45%",
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: "#6EC130",
+    marginBottom: 10,
+  },
   foodImageContainer: {
-    marginRight: 15,
+    padding: 5,
   },
   foodImage: {
-    width: 90,
-    height: 90,
+    width: "100%",
+    height: 100,
+    resizeMode: "cover",
+    borderRadius: 20,
   },
   foodInfoContainer: {
-    flex: 1,
+    padding: 10,
   },
   foodName: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
     marginBottom: 5,
+    alignSelf: "center",
   },
   foodPrice: {
-    fontSize: 16,
-    color: "#888",
-  },
-  outOfStockText: {
-    color: "red",
-    marginTop: 5,
-  },
-  availableQuantityText: {
-    marginTop: 5,
+    fontSize: 15,
+    fontWeight: "bold",
+    color: "#6EC130",
+    marginBottom: 5,
+    alignSelf: "center",
   },
   addToCartButton: {
-    backgroundColor: "#4CAF50",
-    marginTop: 10,
-    paddingVertical: 5,
-    paddingHorizontal: 15,
-    borderRadius: 3,
-  },
-  addToCartButtonDisabled: {
-    backgroundColor: "#ddd",
+    backgroundColor: "#6EC130",
+    borderRadius: 20,
+    padding: 5,
+    width: "60%",
+    alignSelf: "center",
   },
   addToCartButtonText: {
     color: "#fff",
-    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
   },
-  cartButtonContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 20,
-  },
-  cartButton: {
-    backgroundColor: "#4CAF50",
-    paddingVertical: 10,
+
+  helaBojunContainer: {
+    backgroundColor: "#6EC130",
     paddingHorizontal: 30,
-    borderRadius: 3,
+    paddingVertical: 10,
+    marginLeft: 48,
+    marginRight: 48,
   },
-  cartButtonText: {
-    color: "#fff",
-    fontSize: 18,
+  hostelText: {
+    color: "#000",
+    fontSize: 22,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  /*cart*/
+  cartIcon: {
+    marginRight: 40,
+    width: 25,
+    height: 25,
+  },
+
+  /*cart*/
+  headerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
 });
 

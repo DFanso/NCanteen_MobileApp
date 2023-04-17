@@ -19,7 +19,7 @@ const AudiLunch = ({ navigation }) => {
   const fetchFoodItems = async () => {
     try {
       const response = await axios.get(
-        "http://192.168.1.7:3000/api/food-items/list?canteenId=643bf47b34379c74054a99f1&mealType=lunch"
+        "http://192.168.1.4:3000/api/food-items/list?canteenId=643bf47b34379c74054a99f1&mealType=lunch"
       );
       setFoodItems(response.data.foodItems);
     } catch (error) {
@@ -50,7 +50,6 @@ const AudiLunch = ({ navigation }) => {
 
     return () => backHandler.remove();
   }, [page]);
-
 
   const renderFoodItem = (foodItem) => {
     const outOfStock = foodItem.quantity === 0;
@@ -119,7 +118,6 @@ const AudiLunch = ({ navigation }) => {
                   }}
                 />
               </TouchableOpacity>
-
             </View>
             <Text style={styles.orderText}>
               Please order the items you want at least half hour before.
