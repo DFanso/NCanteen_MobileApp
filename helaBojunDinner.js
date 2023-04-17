@@ -20,7 +20,7 @@ const HelaBojunDinner = ({ navigation }) => {
   const fetchFoodItems = async () => {
     try {
       const response = await axios.get(
-        "http://192.168.1.4:3000/api/food-items/list?canteenId=643bf46d34379c74054a99ee&mealType=dinner"
+        "http://192.168.1.7:3000/api/food-items/list?canteenId=643bf46d34379c74054a99ee&mealType=dinner"
       );
       setFoodItems(response.data.foodItems);
     } catch (error) {
