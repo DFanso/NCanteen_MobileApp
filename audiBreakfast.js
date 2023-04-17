@@ -5,19 +5,22 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  BackHandler,
 } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 import { CartContext } from "./CartContext";
+import Cart from "./cart.js";
 import axios from "axios";
 
-const AudiBreakfast = () => {
+const AudiBreakfast = ({ navigation }) => {
+  const [page, setPage] = useState("audiBreakfast");
   const [foodItems, setFoodItems] = useState([]);
   const { addToCart } = useContext(CartContext);
 
   const fetchFoodItems = async () => {
     try {
       const response = await axios.get(
-        "http://192.168.1.4:3000/api/food-items/list?canteenId=643bf47b34379c74054a99f1&mealType=breakfast"
+        "http://192.168.1.7:3000/api/food-items/list?canteenId=643bf47b34379c74054a99f1&mealType=breakfast"
       );
       setFoodItems(response.data.foodItems);
     } catch (error) {
@@ -28,6 +31,27 @@ const AudiBreakfast = () => {
   useEffect(() => {
     fetchFoodItems();
   }, []);
+
+  const handleButtonPress = (buttonName) => {
+    setPage(buttonName);
+  };
+
+  useEffect(() => {
+    const backAction = () => {
+      if (page !== "audiBreakfast") {
+        setPage("audiBreakfast");
+        return true;
+      }
+      return false;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, [page]);
 
   const renderFoodItem = (foodItem) => {
     const outOfStock = foodItem.quantity === 0;
@@ -73,37 +97,43 @@ const AudiBreakfast = () => {
     );
   };
   return (
-    <View style={styles.container}>
-      <View style={styles.welcomeContainer}>
-        <Text style={styles.welcomeText}>Welcome</Text>
-      </View>
-      <View style={styles.helaBojunContainer}>
-        <Text style={styles.hostelText}>Auditorium Canteen</Text>
-      </View>
-
-      <View style={styles.menuContainer}>
-        <View style={styles.headerContainer}>
-          <View style={styles.menuHeader}>
-            <Text style={styles.menuHeaderText}>Lunch Food Menu</Text>
+    <>
+      {page === "audiBreakfast" ? (
+        <View style={styles.container}>
+          <View style={styles.welcomeContainer}>
+            <Text style={styles.welcomeText}>Welcome</Text>
           </View>
-          <TouchableOpacity onPress={() => handleButtonPress("cart")}>
-            <Image
-              style={styles.cartIcon}
-              source={{
-                uri: "https://drive.google.com/uc?export=view&id=1wsIvFn-dgqzLn2Dj65_piCFMbHQLkBKK",
-              }}
-            />
-          </TouchableOpacity>
-        </View>
+          <View style={styles.helaBojunContainer}>
+            <Text style={styles.hostelText}>Auditorium Canteen</Text>
+          </View>
 
-        <Text style={styles.orderText}>
-          Please order the items you want at least half hour before.
-        </Text>
-        <View style={styles.menuItemsContainer}>
-          {foodItems.map((foodItem) => renderFoodItem(foodItem))}
+          <View style={styles.menuContainer}>
+            <View style={styles.headerContainer}>
+              <View style={styles.menuHeader}>
+                <Text style={styles.menuHeaderText}>Breakfast Food Menu</Text>
+              </View>
+              <TouchableOpacity onPress={() => handleButtonPress("cart")}>
+                <Image
+                  style={styles.cartIcon}
+                  source={{
+                    uri: "https://drive.google.com/uc?export=view&id=1wsIvFn-dgqzLn2Dj65_piCFMbHQLkBKK",
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+
+            <Text style={styles.orderText}>
+              Please order the items you want at least half hour before.
+            </Text>
+            <View style={styles.menuItemsContainer}>
+              {foodItems.map((foodItem) => renderFoodItem(foodItem))}
+            </View>
+          </View>
         </View>
-      </View>
-    </View>
+      ) : (
+        <Cart />
+      )}
+    </>
   );
 };
 

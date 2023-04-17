@@ -49,7 +49,7 @@ const RegistrationScreen = ({ navigation }) => {
       };
 
       axios
-        .post("http://192.168.1.4:3000/api/client/register", userData)
+        .post("http://192.168.1.7:3000/api/client/register", userData)
         .then((response) => {
           console.log(response.data);
           // Navigate to the next screen or show a success message.

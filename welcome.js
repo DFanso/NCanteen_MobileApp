@@ -9,6 +9,7 @@ import {
 import HelaBojunWelcome from "./helaBojunWelcome";
 import AudiWelcome from "./audiWelcome";
 import HostelWelcome from "./hostelWelcome";
+import OrderHistory from "./orderHistory";
 
 const WelcomePage = ({ navigation }) => {
   const [page, setPage] = useState("Welcome");
@@ -40,6 +41,14 @@ const WelcomePage = ({ navigation }) => {
         <View style={styles.welcomeContainer}>
           <Text style={styles.welcomeText}>Welcome</Text>
           <View style={styles.buttonsContainer}>
+
+            <TouchableOpacity
+              style={styles.orderbutton}
+              onPress={() => handleButtonPress("order History")}
+            >
+              <Text style={styles.orderbuttonText}>Order  History</Text>
+            </TouchableOpacity>
+
             <TouchableOpacity
               style={styles.button}
               onPress={() => handleButtonPress("Hela Bojun")}
@@ -60,6 +69,8 @@ const WelcomePage = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         </View>
+      ) : page === "order History" ? (
+        <OrderHistory />
       ) : page === "Hela Bojun" ? (
         <HelaBojunWelcome />
       ) : page === "Auditorium" ? (
@@ -96,8 +107,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     width: "90%",
     color: "#6EC130",
-    marginBottom: 150,
+
   },
+
   buttonsContainer: {
     flexDirection: "column",
     justifyContent: "space-between",
@@ -129,6 +141,23 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#6EC130",
   },
+  orderbuttonText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 18,
+    textAlign: "left",
+  },
+  orderbutton: {
+    backgroundColor: "#6EC130",
+    borderWidth: 2,
+    borderColor: "#6EC130",
+    borderRadius: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginTop: 10,
+    marginBottom: 120,
+
+  }
 });
 
 export default WelcomePage;
