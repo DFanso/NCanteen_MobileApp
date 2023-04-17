@@ -1,244 +1,248 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, BackHandler } from 'react-native';
-import Cart from './cart.js';
+import React, { useState, useEffect, useContext } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  BackHandler,
+} from "react-native";
+import axios from "axios";
+import Cart from "./cart.js";
+import { CartContext } from "./CartContext";
 
 const HelaBojunLunch = ({ navigation }) => {
+  const [page, setPage] = useState("helaBojunLunch");
+  const [foodItems, setFoodItems] = useState([]);
+  const { addToCart } = useContext(CartContext);
 
-    const [page, setPage] = useState('helaBojunLunch');
+  const fetchFoodItems = async () => {
+    try {
+      const response = await axios.get(
+        "http://192.168.1.4:3000/api/food-items/list?canteenId=643bf46d34379c74054a99ee&mealType=lunch"
+      );
+      setFoodItems(response.data.foodItems);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
-    const handleButtonPress = (buttonName) => {
-        setPage(buttonName);
+  useEffect(() => {
+    fetchFoodItems();
+  }, []);
+
+  const handleButtonPress = (buttonName) => {
+    setPage(buttonName);
+  };
+
+  useEffect(() => {
+    const backAction = () => {
+      if (page !== "helaBojunLunch") {
+        setPage("helaBojunLunch");
+        return true;
+      }
+      return false;
     };
 
-    useEffect(() => {
-        const backAction = () => {
-            if (page !== 'helaBojunLunch') {
-                setPage('helaBojunLunch');
-                return true;
-            }
-            return false;
-        };
-
-        const backHandler = BackHandler.addEventListener(
-            'hardwareBackPress',
-            backAction,
-        );
-
-        return () => backHandler.remove();
-    }, [page]);
-    return (
-        <>
-            {page === 'helaBojunLunch' ? (
-                <View style={styles.container}>
-                    <View style={styles.welcomeContainer}>
-                        <Text style={styles.welcomeText}>Welcome</Text>
-                    </View>
-                    <View style={styles.helaBojunContainer}>
-                        <Text style={styles.hostelText}>Hela Bojun</Text>
-                    </View>
-
-                    <View style={styles.menuContainer}>
-                        <View style={styles.headerContainer}>
-                            <View style={styles.menuHeader}>
-                                <Text style={styles.menuHeaderText}>Lunch Food Menu</Text>
-                            </View>
-                            <TouchableOpacity onPress={() => handleButtonPress('cart')}>
-                                <Image style={styles.cartIcon} source={{ uri: 'https://drive.google.com/uc?export=view&id=1wsIvFn-dgqzLn2Dj65_piCFMbHQLkBKK' }} />
-                            </TouchableOpacity>
-                        </View>
-
-
-
-                        <Text style={styles.orderText}>Please order the items you want at least half hour before.</Text>
-                        <View style={styles.menuItemsContainer}>
-
-                            <View style={styles.menuItem}>
-                                <View style={styles.foodImageContainer}>
-                                    <Image style={styles.foodImage} source={{ uri: 'https://drive.google.com/uc?export=view&id=1BGzxd1NRmNSxWMJK0CenMYzvStlWWlZQ' }} />
-                                </View>
-                                <View style={styles.foodInfoContainer}>
-                                    <Text style={styles.foodName}>String Hoppers</Text>
-                                    <Text style={styles.foodPrice}>Rs. 350</Text>
-                                    <TouchableOpacity style={styles.addToCartButton}>
-                                        <Text style={styles.addToCartButtonText}>Add to Cart</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-
-                            <View style={styles.menuItem}>
-                                <View style={styles.foodImageContainer}>
-                                    <Image style={styles.foodImage} source={{ uri: 'https://drive.google.com/uc?export=view&id=1BGzxd1NRmNSxWMJK0CenMYzvStlWWlZQ' }} />
-                                </View>
-                                <View style={styles.foodInfoContainer}>
-                                    <Text style={styles.foodName}>String Hoppers</Text>
-                                    <Text style={styles.foodPrice}>Rs. 350</Text>
-                                    <TouchableOpacity style={styles.addToCartButton}>
-                                        <Text style={styles.addToCartButtonText}>Add to Cart</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-
-                            <View style={styles.menuItem}>
-                                <View style={styles.foodImageContainer}>
-                                    <Image style={styles.foodImage} source={{ uri: 'https://drive.google.com/uc?export=view&id=1BGzxd1NRmNSxWMJK0CenMYzvStlWWlZQ' }} />
-                                </View>
-                                <View style={styles.foodInfoContainer}>
-                                    <Text style={styles.foodName}>String Hoppers</Text>
-                                    <Text style={styles.foodPrice}>Rs. 350</Text>
-                                    <TouchableOpacity style={styles.addToCartButton}>
-                                        <Text style={styles.addToCartButtonText}>Add to Cart</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-
-                            <View style={styles.menuItem}>
-                                <View style={styles.foodImageContainer}>
-                                    <Image style={styles.foodImage} source={{ uri: 'https://drive.google.com/uc?export=view&id=1BGzxd1NRmNSxWMJK0CenMYzvStlWWlZQ' }} />
-                                </View>
-                                <View style={styles.foodInfoContainer}>
-                                    <Text style={styles.foodName}>String Hoppers</Text>
-                                    <Text style={styles.foodPrice}>Rs. 350</Text>
-                                    <TouchableOpacity style={styles.addToCartButton}>
-                                        <Text style={styles.addToCartButtonText}>Add to Cart</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        </View>
-                    </View>
-                </View>
-            ) : (
-                <Cart />
-            )}
-        </>
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
     );
+
+    return () => backHandler.remove();
+  }, [page]);
+
+  const renderFoodItem = (foodItem) => {
+    const outOfStock = foodItem.quantity === 0;
+
+    const handleAddToCart = () => {
+      if (!outOfStock) {
+        addToCart(foodItem);
+      }
+    };
+
+    return (
+      <View style={styles.menuItem} key={foodItem._id}>
+        <View style={styles.foodImageContainer}>
+          <Image
+            style={styles.foodImage}
+            source={{
+              uri: foodItem.imageUrl,
+            }}
+          />
+        </View>
+        <View style={styles.foodInfoContainer}>
+          <Text style={styles.foodName}>{foodItem.name}</Text>
+          <Text style={styles.foodPrice}>Rs. {foodItem.price.toFixed(2)}</Text>
+          {outOfStock ? (
+            <Text style={styles.outOfStockText}>Out of Stock</Text>
+          ) : (
+            <Text style={styles.availableQuantityText}>
+              Available Quantity: {foodItem.quantity}
+            </Text>
+          )}
+          <TouchableOpacity
+            style={[
+              styles.addToCartButton,
+              outOfStock ? styles.addToCartButtonDisabled : {},
+            ]}
+            onPress={handleAddToCart}
+            disabled={outOfStock}
+          >
+            <Text style={styles.addToCartButtonText}>Add to Cart</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
+
+  return (
+    <>
+      {page === "helaBojunLunch" ? (
+        <View style={styles.container}>
+          <ScrollView>
+            <View style={styles.welcomeContainer}>
+              <Text style={styles.welcomeText}>Welcome</Text>
+            </View>
+            <View style={styles.helaBojunContainer}>
+              <Text style={styles.hostelText}>Hela Bojun</Text>
+            </View>
+
+            <View style={styles.menuContainer}>
+              <View style={styles.headerContainer}>
+                <View style={styles.menuHeader}>
+                  <Text style={styles.menuHeaderText}>Lunch Menu</Text>
+                </View>
+              </View>
+              {foodItems.map(renderFoodItem)}
+            </View>
+          </ScrollView>
+        </View>
+      ) : (
+        <Cart navigation={navigation} />
+      )}
+      <View style={styles.cartButtonContainer}>
+        <TouchableOpacity
+          style={styles.cartButton}
+          onPress={() => handleButtonPress("cart")}
+        >
+          <Text style={styles.cartButtonText}>View Cart</Text>
+        </TouchableOpacity>
+      </View>
+    </>
+  );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-    },
-    welcomeContainer: {
-        alignItems: 'center',
-        marginTop: 20,
-        paddingHorizontal: 30,
-        borderWidth: 2,
-        borderColor: '#6EC130',
-        backgroundColor: '#fff',
-        marginBottom: 20,
-        marginLeft: 48,
-        marginRight: 48,
-    },
-    welcomeText: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        color: '#6EC130',
-        padding: 10,
-    },
-    menuContainer: {
-        margin: 15,
-        paddingTop: 10,
-
-    },
-    menuHeader: {
-        borderWidth: 2,
-        borderColor: '#6EC130',
-        borderRadius: 5,
-        padding: 10,
-        backgroundColor: '#fff',
-        width: '45%',
-        marginLeft: 30,
-    },
-    menuHeaderText: {
-        fontSize: 17,
-        fontWeight: 'bold',
-        color: '#6EC130',
-
-    },
-    orderText: {
-        marginVertical: 15,
-        color: '#4EE476',
-        textAlign: 'center',
-    },
-    menuItemsContainer: {
-        marginTop: 5,
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'space-between',
-    },
-    menuItem: {
-        width: '45%',
-        backgroundColor: '#fff',
-        borderRadius: 20,
-        borderWidth: 2,
-        borderColor: '#6EC130',
-        marginBottom: 10,
-    },
-    foodImageContainer: {
-        padding: 5,
-    },
-    foodImage: {
-        width: '100%',
-        height: 100,
-        resizeMode: 'cover',
-        borderRadius: 20,
-    },
-    foodInfoContainer: {
-        padding: 10,
-    },
-    foodName: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        marginBottom: 5,
-        alignSelf: 'center',
-    },
-    foodPrice: {
-        fontSize: 15,
-        fontWeight: 'bold',
-        color: '#6EC130',
-        marginBottom: 5,
-        alignSelf: 'center',
-    },
-    addToCartButton: {
-        backgroundColor: '#6EC130',
-        borderRadius: 20,
-        padding: 5,
-        width: '60%',
-        alignSelf: 'center',
-    },
-    addToCartButtonText: {
-        color: '#fff',
-        fontWeight: 'bold',
-        textAlign: 'center',
-    },
-
-    helaBojunContainer: {
-        backgroundColor: '#6EC130',
-        paddingHorizontal: 30,
-        paddingVertical: 10,
-        marginLeft: 48,
-        marginRight: 48,
-    },
-    hostelText: {
-        color: '#000',
-        fontSize: 22,
-        fontWeight: 'bold',
-        textAlign: 'center',
-    },
-    /*cart*/
-    cartIcon: {
-        marginRight: 40,
-        width: 25,
-        height: 25,
-    },
-
-    /*cart*/
-    headerContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
+  container: {
+    flex: 1,
+  },
+  welcomeContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  welcomeText: {
+    fontSize: 25,
+    fontWeight: "bold",
+    color: "#1f1f1f",
+  },
+  helaBojunContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  hostelText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#1f1f1f",
+  },
+  menuContainer: {
+    marginTop: 15,
+  },
+  headerContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  menuHeader: {
+    backgroundColor: "#1f1f1f",
+    borderRadius: 5,
+    padding: 5,
+  },
+  menuHeaderText: {
+    color: "white",
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  menuItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "#ffffff",
+    marginHorizontal: 10,
+    marginVertical: 5,
+    borderRadius: 5,
+    paddingHorizontal: 5,
+    paddingVertical: 10,
+  },
+  foodImageContainer: {
+    width: "30%",
+  },
+  foodImage: {
+    width: "100%",
+    height: 70,
+  },
+  foodInfoContainer: {
+    width: "70%",
+  },
+  foodName: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#1f1f1f",
+  },
+  foodPrice: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#1f1f1f",
+  },
+  availableQuantityText: {
+    fontSize: 14,
+    color: "green",
+  },
+  outOfStockText: {
+    fontSize: 14,
+    color: "red",
+  },
+  addToCartButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#1f1f1f",
+    borderRadius: 5,
+    paddingVertical: 5,
+    marginTop: 5,
+  },
+  addToCartButtonDisabled: {
+    backgroundColor: "#cccccc",
+  },
+  addToCartButtonText: {
+    color: "white",
+    fontSize: 14,
+    fontWeight: "bold",
+  },
+  cartButtonContainer: {
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+  },
+  cartButton: {
+    backgroundColor: "#1f1f1f",
+    borderRadius: 5,
+    padding: 10,
+  },
+  cartButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
 });
 
 export default HelaBojunLunch;
