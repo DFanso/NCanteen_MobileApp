@@ -57,6 +57,7 @@ const Payment = ({ totalPrice, cartItems }) => {
         quantity: item.quantity,
         imageUrl: item.imageUrl,
         name: item.name,
+        price: item.price,
       })),
     };
 
