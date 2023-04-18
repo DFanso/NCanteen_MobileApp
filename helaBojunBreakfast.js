@@ -11,11 +11,12 @@ import {
 import axios from "axios";
 import Cart from "./cart.js";
 import { CartContext } from "./CartContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const HelaBojunBreakfast = ({ navigation }) => {
   const [page, setPage] = useState("helaBojunBreakfast");
   const [foodItems, setFoodItems] = useState([]);
-  const { addToCart } = useContext(CartContext);
+  const { addToCart, clearCart } = useContext(CartContext);
 
   const fetchFoodItems = async () => {
     try {
@@ -29,8 +30,18 @@ const HelaBojunBreakfast = ({ navigation }) => {
   };
 
   useEffect(() => {
+    const canteenId = "643bf46d34379c74054a99ee";
+    storeCanteenId(canteenId);
     fetchFoodItems();
   }, []);
+
+  const storeCanteenId = async (canteenId) => {
+    try {
+      await AsyncStorage.setItem("canteenId", canteenId);
+    } catch (error) {
+      console.error("Error saving canteen ID:", error);
+    }
+  };
 
   const handleButtonPress = (buttonName) => {
     setPage(buttonName);
@@ -40,6 +51,7 @@ const HelaBojunBreakfast = ({ navigation }) => {
     const backAction = () => {
       if (page !== "helaBojunBreakfast") {
         setPage("helaBojunBreakfast");
+        clearCart();
         return true;
       }
       return false;
@@ -54,7 +66,7 @@ const HelaBojunBreakfast = ({ navigation }) => {
   }, [page]);
 
   const renderFoodItem = (foodItem) => {
-    const outOfStock = foodItem.quantity === 0;
+    const outOfStock = foodItem.quantity <= 0;
 
     const handleAddToCart = () => {
       if (!outOfStock) {

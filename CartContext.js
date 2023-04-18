@@ -21,13 +21,18 @@ export const CartProvider = ({ children }) => {
       }
     });
   };
+  const clearCart = () => {
+    setCartItems([]);
+  };
 
   const removeFromCart = (itemId) => {
     setCartItems(cartItems.filter((item) => item._id !== itemId));
   };
 
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart }}>
+    <CartContext.Provider
+      value={{ cartItems, addToCart, removeFromCart, clearCart }}
+    >
       {children}
     </CartContext.Provider>
   );

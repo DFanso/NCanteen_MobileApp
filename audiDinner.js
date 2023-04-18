@@ -11,11 +11,12 @@ import {
 import axios from "axios";
 import Cart from "./cart.js";
 import { CartContext } from "./CartContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AudiDinner = ({ navigation }) => {
   const [page, setPage] = useState("audiDinner");
   const [foodItems, setFoodItems] = useState([]);
-  const { addToCart } = useContext(CartContext);
+  const { addToCart, clearCart } = useContext(CartContext);
   const fetchFoodItems = async () => {
     try {
       const response = await axios.get(
@@ -24,6 +25,19 @@ const AudiDinner = ({ navigation }) => {
       setFoodItems(response.data.foodItems);
     } catch (error) {
       console.error("Error fetching data:", error);
+    }
+  };
+  useEffect(() => {
+    const canteenId = "643bf47b34379c74054a99f1";
+    storeCanteenId(canteenId);
+    fetchFoodItems();
+  }, []);
+
+  const storeCanteenId = async (canteenId) => {
+    try {
+      await AsyncStorage.setItem("canteenId", canteenId);
+    } catch (error) {
+      console.error("Error saving canteen ID:", error);
     }
   };
   useEffect(() => {
@@ -38,6 +52,7 @@ const AudiDinner = ({ navigation }) => {
     const backAction = () => {
       if (page !== "audiDinner") {
         setPage("audiDinner");
+        clearCart();
         return true;
       }
       return false;
@@ -52,7 +67,7 @@ const AudiDinner = ({ navigation }) => {
   }, [page]);
 
   const renderFoodItem = (foodItem) => {
-    const outOfStock = foodItem.quantity === 0;
+    const outOfStock = foodItem.quantity <= 0;
 
     const handleAddToCart = () => {
       if (!outOfStock) {

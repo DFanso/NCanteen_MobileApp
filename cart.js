@@ -1,5 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image, BackHandler } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  BackHandler,
+} from "react-native";
 import { CartContext } from "./CartContext";
 import { ScrollView } from "react-native";
 import Payment from "./payment.js";
@@ -53,7 +60,10 @@ const Cart = ({ navigation }) => {
 
           <View style={styles.cartItemsContainer}>
             {cartItems.map((item, index) => (
-              <View style={styles.cartItemContainer} key={`${item._id}-${index}`}>
+              <View
+                style={styles.cartItemContainer}
+                key={`${item._id}-${index}`}
+              >
                 <Text style={styles.itemName}>{item.name}</Text>
                 <Image
                   style={styles.itemImage}
@@ -61,7 +71,9 @@ const Cart = ({ navigation }) => {
                     uri: item.imageUrl,
                   }}
                 />
-                <Text style={styles.itemPrice}>Rs. {item.price.toFixed(2)}</Text>
+                <Text style={styles.itemPrice}>
+                  Rs. {item.price.toFixed(2)}
+                </Text>
                 <Text style={styles.itemQuantity}>Qty: {item.quantity}</Text>
                 <TouchableOpacity
                   onPress={() => removeFromCart(item._id)}
@@ -76,18 +88,20 @@ const Cart = ({ navigation }) => {
             <Text style={styles.checkbuttonText}>
               Rs. {totalPrice.toFixed(2)}
             </Text>
-            <TouchableOpacity style={styles.button} onPress={() => handleButtonPress("Payment")}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => handleButtonPress("Payment")}
+            >
               <Text style={styles.buttonText}>Checkout</Text>
             </TouchableOpacity>
           </View>
         </View>
       ) : (
-        <Payment />
+        <Payment totalPrice={totalPrice} cartItems={cartItems} />
       )}
     </ScrollView>
-
   );
-}
+};
 const styles = StyleSheet.create({
   container: {
     flex: 1,

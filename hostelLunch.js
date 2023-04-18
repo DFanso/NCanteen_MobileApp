@@ -11,10 +11,11 @@ import {
 import axios from "axios";
 import { CartContext } from "./CartContext";
 import Cart from "./cart";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const HostelLunch = ({ navigation }) => {
   const [foodItems, setFoodItems] = useState([]);
-  const { addToCart } = useContext(CartContext);
+  const { addToCart, clearCart } = useContext(CartContext);
   const fetchFoodItems = async () => {
     try {
       const response = await axios.get(
@@ -26,10 +27,23 @@ const HostelLunch = ({ navigation }) => {
     }
   };
   useEffect(() => {
+    const canteenId = "643bf48c34379c74054a99f4";
+    storeCanteenId(canteenId);
+    fetchFoodItems();
+  }, []);
+
+  const storeCanteenId = async (canteenId) => {
+    try {
+      await AsyncStorage.setItem("canteenId", canteenId);
+    } catch (error) {
+      console.error("Error saving canteen ID:", error);
+    }
+  };
+  useEffect(() => {
     fetchFoodItems();
   }, []);
   const renderFoodItem = (foodItem) => {
-    const outOfStock = foodItem.quantity === 0;
+    const outOfStock = foodItem.quantity <= 0;
 
     const handleAddToCart = () => {
       if (!outOfStock) {
@@ -82,6 +96,7 @@ const HostelLunch = ({ navigation }) => {
     const backAction = () => {
       if (page !== "hostelLunch") {
         setPage("hostelLunch");
+        clearCart();
         return true;
       }
       return false;
