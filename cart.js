@@ -63,23 +63,28 @@ const Cart = ({ navigation }) => {
           </TouchableOpacity>
         </View> */}
 
+
           <View style={styles.cartItemsContainer}>
             {cartItems.map((item, index) => (
               <View
                 style={styles.cartItemContainer}
                 key={`${item._id}-${index}`}
               >
-                <Text style={styles.itemName}>{item.name}</Text>
-                <Image
-                  style={styles.itemImage}
-                  source={{
-                    uri: item.imageUrl,
-                  }}
-                />
-                <Text style={styles.itemPrice}>
-                  Rs. {item.price.toFixed(2)}
-                </Text>
-                <Text style={styles.itemQuantity}>Qty: {item.quantity}</Text>
+                <View style={styles.itemInfo}>
+                  <Text style={styles.itemName}>{item.name}</Text>
+                  <Image
+                    style={styles.itemImage}
+                    source={{
+                      uri: item.imageUrl,
+                    }}
+                  />
+                </View>
+                <View>
+                  <Text style={styles.itemPrice}>
+                    Rs. {item.price.toFixed(2)}
+                  </Text>
+                  <Text style={styles.itemQuantity}>Qty: {item.quantity}</Text>
+                </View>
                 <TouchableOpacity
                   onPress={() => removeFromCart(item._id)}
                   style={styles.removeButton}
@@ -88,6 +93,10 @@ const Cart = ({ navigation }) => {
                 </TouchableOpacity>
               </View>
             ))}
+
+
+
+
           </View>
           <View style={styles.checkbuttonsContainer}>
             <Text style={styles.checkbuttonText}>
@@ -152,23 +161,29 @@ const styles = StyleSheet.create({
   },
   itemInfo: {
     flexDirection: "column",
+    marginRight: 15,
   },
   itemName: {
-    fontSize: 18,
+    marginLeft: 10,
+    fontSize: 17,
     fontWeight: "bold",
+    color: "green",
   },
   itemPrice: {
     fontSize: 16,
     color: "green",
+    fontWeight: "bold",
     marginTop: 5,
   },
   itemQuantity: {
     fontSize: 16,
+    color: "green",
     fontWeight: "bold",
   },
   removeButton: {
+    marginRight: 10,
     backgroundColor: "red",
-    padding: 10,
+    padding: 5,
     borderRadius: 5,
   },
   removeButtonText: {
@@ -185,16 +200,17 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   itemImage: {
+    marginLeft: 10,
     width: 50,
     height: 50,
     resizeMode: "cover",
-    marginRight: 15,
+    marginTop: 5,
+
   },
   itemPrice: {
-    color: "blue",
     fontSize: 16,
     fontWeight: "bold",
-    marginRight: 10,
+    color: "green",
   },
   icon: {
     width: 20,
@@ -204,7 +220,9 @@ const styles = StyleSheet.create({
   },
   itemQuantity: {
     fontSize: 16,
+    color: "green",
     fontWeight: "bold",
+    marginTop: 3,
   },
   redCircle: {
     width: 20,
