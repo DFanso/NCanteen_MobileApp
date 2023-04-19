@@ -21,7 +21,7 @@ const HelaBojunLunch = ({ navigation }) => {
   const fetchFoodItems = async () => {
     try {
       const response = await axios.get(
-        "http://192.168.1.4:3000/api/food-items/list?canteenId=643bf46d34379c74054a99ee&mealType=lunch"
+        "http://192.168.1.7:3000/api/food-items/list?canteenId=643bf46d34379c74054a99ee&mealType=lunch"
       );
       setFoodItems(response.data.foodItems);
     } catch (error) {
@@ -276,6 +276,24 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+  },
+  outOfStockText: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "red",
+    marginBottom: 5,
+    alignSelf: "center",
+  },
+
+  availableQuantityText: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#6EC130",
+    marginBottom: 5,
+    alignSelf: "center",
+  },
+  addToCartButtonDisabled: {
+    backgroundColor: "#ccc",
   },
 });
 

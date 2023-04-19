@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   BackHandler,
+  Alert,
 } from "react-native";
 import { CartContext } from "./CartContext";
 import { ScrollView } from "react-native";
@@ -19,6 +20,10 @@ const Cart = ({ navigation }) => {
     0
   );
   const handleButtonPress = (buttonName) => {
+    if (totalPrice === 0) {
+      Alert.alert("Your cart is empty", "Please add items to your cart before proceeding with the payment.");
+      return;
+    }
     setPage(buttonName);
   };
 
