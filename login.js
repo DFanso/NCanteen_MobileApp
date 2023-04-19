@@ -47,7 +47,7 @@ const LoginScreen = () => {
 
     try {
       const response = await axios.post(
-        "http://192.168.1.4:3000/api/client/login",
+        "http://192.168.1.7:3000/api/client/login",
         {
           email,
           password,
@@ -170,6 +170,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     width: 250,
+    color: "#fff"
   },
   loginButton: {
     backgroundColor: "#4CBB17",
