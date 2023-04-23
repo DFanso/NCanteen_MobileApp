@@ -114,35 +114,37 @@ const AudiDinner = ({ navigation }) => {
     <>
       {page === "audiDinner" ? (
         <View style={styles.container}>
-          <View style={styles.welcomeContainer}>
-            <Text style={styles.welcomeText}>Welcome</Text>
-          </View>
-          <View style={styles.helaBojunContainer}>
-            <Text style={styles.hostelText}>Auditorium Canteen</Text>
-          </View>
+          <ScrollView>
+            <View style={styles.welcomeContainer}>
+              <Text style={styles.welcomeText}>Welcome</Text>
+            </View>
+            <View style={styles.helaBojunContainer}>
+              <Text style={styles.hostelText}>Auditorium Canteen</Text>
+            </View>
 
-          <View style={styles.menuContainer}>
-            <View style={styles.headerContainer}>
-              <View style={styles.menuHeader}>
-                <Text style={styles.menuHeaderText}>Dinner Food Menu</Text>
+            <View style={styles.menuContainer}>
+              <View style={styles.headerContainer}>
+                <View style={styles.menuHeader}>
+                  <Text style={styles.menuHeaderText}>Dinner Food Menu</Text>
+                </View>
+
+                <TouchableOpacity onPress={() => handleButtonPress("cart")}>
+                  <Image
+                    style={styles.cartIcon}
+                    source={{
+                      uri: "https://drive.google.com/uc?export=view&id=1wsIvFn-dgqzLn2Dj65_piCFMbHQLkBKK",
+                    }}
+                  />
+                </TouchableOpacity>
               </View>
-
-              <TouchableOpacity onPress={() => handleButtonPress("cart")}>
-                <Image
-                  style={styles.cartIcon}
-                  source={{
-                    uri: "https://drive.google.com/uc?export=view&id=1wsIvFn-dgqzLn2Dj65_piCFMbHQLkBKK",
-                  }}
-                />
-              </TouchableOpacity>
+              <Text style={styles.orderText}>
+                Please order the items you want at least half hour before.
+              </Text>
+              <View style={styles.menuItemsContainer}>
+                {foodItems.map((foodItem) => renderFoodItem(foodItem))}
+              </View>
             </View>
-            <Text style={styles.orderText}>
-              Please order the items you want at least half hour before.
-            </Text>
-            <View style={styles.menuItemsContainer}>
-              {foodItems.map((foodItem) => renderFoodItem(foodItem))}
-            </View>
-          </View>
+          </ScrollView>
         </View>
       ) : (
         <Cart />
