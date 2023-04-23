@@ -19,7 +19,7 @@ const HostelLunch = ({ navigation }) => {
   const fetchFoodItems = async () => {
     try {
       const response = await axios.get(
-        "http://192.168.1.7:3000/api/food-items/list?canteenId=643bf48c34379c74054a99f4&mealType=lunch"
+        "http://20.2.80.190:1214/api/food-items/list?canteenId=643bf48c34379c74054a99f4&mealType=lunch"
       );
       setFoodItems(response.data.foodItems);
     } catch (error) {

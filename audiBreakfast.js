@@ -21,7 +21,7 @@ const AudiBreakfast = ({ navigation }) => {
   const fetchFoodItems = async () => {
     try {
       const response = await axios.get(
-        "http://192.168.1.7:3000/api/food-items/list?canteenId=643bf47b34379c74054a99f1&mealType=breakfast"
+        "http://20.2.80.190:1214/api/food-items/list?canteenId=643bf47b34379c74054a99f1&mealType=breakfast"
       );
       setFoodItems(response.data.foodItems);
     } catch (error) {

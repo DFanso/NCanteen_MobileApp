@@ -17,7 +17,7 @@ const OrderHistory = () => {
       try {
         const token = await AsyncStorage.getItem("jwt");
         const response = await axios.get(
-          "http://192.168.1.7:3000/api/order-history",
+          "http://20.2.80.190:1214/api/order-history",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -42,7 +42,7 @@ const OrderHistory = () => {
       const token = await AsyncStorage.getItem("jwt");
       console.log(token);
       await axios.put(
-        `http://192.168.1.7:3000/api/checkouts/cancel/${orderId}`,
+        `http://20.2.80.190:1214/api/checkouts/cancel/${orderId}`,
         {},
         {
           headers: {

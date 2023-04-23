@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import WelcomePage from './welcome.js'
+import WelcomePage from "./welcome.js";
 import { CartContext } from "./CartContext";
 
 const Payment = ({ navigation, totalPrice, cartItems }) => {
@@ -43,10 +43,7 @@ const Payment = ({ navigation, totalPrice, cartItems }) => {
     setCvc(value);
   };
 
-
-
   const handleSubmit = async () => {
-
     const isNameValid = name.trim().length > 0;
     const isCardNumberValid = /^\d{16}$/.test(cardNumber);
     const isExpiryValid = /^(0[1-9]|1[0-2])\/\d{2}$/.test(expiry);
@@ -78,7 +75,7 @@ const Payment = ({ navigation, totalPrice, cartItems }) => {
     // Send the data to your API using Axios
     try {
       const response = await axios.post(
-        "http://192.168.1.7:3000/api/checkouts",
+        "http://20.2.80.190:1214/api/checkouts",
         data,
         {
           headers: {
@@ -89,19 +86,15 @@ const Payment = ({ navigation, totalPrice, cartItems }) => {
       );
 
       console.log("Payment successful:", response.data);
-      Alert.alert(
-        "Thank you for your payment",
-        "",
-        [
-          {
-            text: "OK",
-            onPress: () => {
-              handleButtonPress("welcome");
-              clearCart();
-            }
+      Alert.alert("Thank you for your payment", "", [
+        {
+          text: "OK",
+          onPress: () => {
+            handleButtonPress("welcome");
+            clearCart();
           },
-        ]
-      );
+        },
+      ]);
     } catch (error) {
       console.error("Payment failed:", error);
     }
@@ -128,7 +121,6 @@ const Payment = ({ navigation, totalPrice, cartItems }) => {
 
     return () => backHandler.remove();
   }, [page]);
-
 
   return (
     <>
