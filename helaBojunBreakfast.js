@@ -21,7 +21,7 @@ const HelaBojunBreakfast = ({ navigation }) => {
   const fetchFoodItems = async () => {
     try {
       const response = await axios.get(
-        "http://20.2.80.190:1214/api/food-items/list?canteenId=643bf46d34379c74054a99ee&mealType=breakfast"
+        "http://159.89.203.249:2001/api/food-items/list?canteenId=643bf46d34379c74054a99ee&mealType=breakfast"
       );
       setFoodItems(response.data.foodItems);
     } catch (error) {

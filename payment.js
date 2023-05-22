@@ -75,7 +75,7 @@ const Payment = ({ navigation, totalPrice, cartItems }) => {
     // Send the data to your API using Axios
     try {
       const response = await axios.post(
-        "http://20.2.80.190:1214/api/checkouts",
+        "http://159.89.203.249:2001/api/checkouts",
         data,
         {
           headers: {
